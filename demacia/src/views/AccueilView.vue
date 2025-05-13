@@ -1,41 +1,31 @@
 <template>
   <div class="container">
-    <section class="eco-engagements">
-      <h2>Soyez Verts ! Nos engagements éco-responsables</h2>
-      <p>
-        Chez EcoCook, nous pensons qu'une alimentation durable commence dès la recette. C'est pourquoi notre site est conçu pour :
-      </p>
-      <ul>
-        <li>Réduire son impact environnemental 🌱</li>
-        <li>Promouvoir la cuisine locale de saison 🍕</li>
-        <li>Informer les utilisateurs avec transparence 🤝</li>
-      </ul>
+    <!-- Section Jeu de la Semaine -->
+    <section class="game-of-the-week">
+      <div class="game-info">
+        <h1>Jeu de la Semaine<br>Note : 9.54/10</h1>
+        <p>
+          Supporting statement for your product's tagline. This text should
+          communicate your unique selling proposition to the reader.
+        </p>
+        <button>AJOUTER À LA LISTE</button>
+      </div>
+      <div class="game-image">
+        <img src="https://via.placeholder.com/400x300" alt="Jeu de la semaine" />
+      </div>
     </section>
 
-    <section class="section">
-      <h2>Catalogue de Saison</h2>
-      <div class="seasons">
-        <div class="season-card">
-          <!--<img src="@/assets/img/hiver.jpg" alt="Hiver">-->
-          <h3>Hiver</h3>
-          <p>Recettes de saison pour l'hiver</p>
-        </div>
-        <div class="season-card">
-          <!--<img src="@/assets/img/printemps.jpg" alt="Printemps">-->
-          <h3>Printemps</h3>
-          <p>Recettes fraîches de printemps</p>
-        </div>
-        <div class="season-card">
-          <!--<img src="@/assets/img/ete.jpg" alt="Été">-->
-          <h3>Été</h3>
-          <p>Plats légers pour l'été</p>
-        </div>
-        <div class="season-card">
-          <!--<img src="@/assets/img/automne.jpg" alt="Automne"> -->
-          <h3>Automne</h3>
-          <p>Saveurs chaudes de l'automne</p>
-        </div>
+    <!-- Section Jeux les plus populaires -->
+    <section class="popular-games">
+      <h2>Jeux les plus populaires</h2>
+      <div class="game-thumbnails">
+        <div class="thumbnail"></div>
+        <div class="thumbnail"></div>
+        <div class="thumbnail"></div>
+        <div class="thumbnail"></div>
+        <div class="thumbnail"></div>
       </div>
+      <p class="footer">Join over 1 000 000 customers worldwide</p>
     </section>
   </div>
 </template>
@@ -47,43 +37,71 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  padding: 40px;
-}
-
-.eco-engagements {
-  margin-bottom: 40px;
-  font-size: 1.3rem;
-}
-
-.eco-engagements ul {
-  list-style-type: disc;
-  margin-left: 20px;
-}
-
-.section h2 {
-  margin-bottom: 20px;
-}
-
-.seasons {
+/* Section Jeu de la Semaine */
+.game-of-the-week {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  font-size: 1.3rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
 }
 
-.season-card {
-  background: #fff;
-  padding: 10px;
+.game-info {
+  max-width: 50%;
+}
+
+.game-info h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.game-info p {
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+.game-info button {
+  padding: 0.75rem 1.5rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.game-info button:hover {
+  background-color: #555;
+}
+
+.game-image img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* Section Jeux les plus populaires */
+.popular-games {
   text-align: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  max-width: 300px;
+  margin-top: 3rem;
 }
 
-.season-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
+.popular-games h2 {
+  margin-bottom: 2rem;
+}
+
+.popular-games .game-thumbnails {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.popular-games .thumbnail {
+  width: 100px;
+  height: 100px;
+  background-color: #ddd;
+  border-radius: 8px;
+}
+
+.footer {
+  margin-top: 2rem;
+  color: #777;
 }
 </style>
