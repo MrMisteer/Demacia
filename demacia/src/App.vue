@@ -1,49 +1,59 @@
 <template>
   <div>
-    <!-- Barre de navigation -->
-    <nav class="navbar">
-      <div class="logo">Demaciaa</div>
-      <div class="nav-links">
-        <router-link to="/">Accueil</router-link>
-        <router-link v-if="isLoggedIn" to="/Profile">Profile</router-link>
-        <router-link to="/Catalogue">Catalogue</router-link>
-        <router-link to="/Forum">Forum</router-link>
-      </div>
-      <div class="auth-buttons">
-        <input type="text" class="search-bar" placeholder="Search" />
-        <router-link v-if="!isLoggedIn" to="/Register" class="signup">Sign Up</router-link>
-        <router-link v-if="!isLoggedIn" to="/Login" class="login">Log In</router-link>
-        <button v-if="isLoggedIn" @click="logout" class="logout">Log Out</button>
-      </div>
-    </nav>
-
-    <!-- Contenu principal -->
+    <header>
+      <h1>Demacia</h1>
+      <nav class="navbar">
+        <div class="nav-links">
+          <router-link to="/" role="button">Accueil</router-link>
+          <router-link to="/Catalogue" role="button">Nos Jeux</router-link>
+          <router-link to="/About" role="button">À propos</router-link>
+          <router-link v-if="isLoggedIn" to="/Favoris">Mes Favoris</router-link>
+        </div>
+        <div class="auth-buttons">
+          <router-link v-if="!isLoggedIn" to="/Login" class="login btn">
+            Se connecter
+          </router-link>
+          <button
+            v-else
+            class="logout btn"
+            @click="logout"
+          >
+            Se déconnecter
+          </button>
+        </div>
+      </nav>
+    </header>
     <router-view />
   </div>
 </template>
 
 <script>
+import UserDataService from './services/UserDataService'
+
 export default {
-  data () {
-    return {
-      isLoggedIn: false
+  computed: {
+    isLoggedIn () {
+      return !!this.$store.getters.user
     }
   },
   created () {
-    // Vérifie dans le localStorage si l’utilisateur est connecté
-    this.isLoggedIn = localStorage.getItem('utilisateurConnecte') === 'true'
+    UserDataService.getAuth()
+      .then(response => {
+        this.$store.dispatch('setUser', response.data)
+      })
+      .catch(error => {
+        this.$store.dispatch('setUser', null)
+        console.error('Erreur lors de la récupération de l’utilisateur:', error)
+      })
   },
   methods: {
     logout () {
-      localStorage.removeItem('utilisateurConnecte')
-      this.isLoggedIn = false
-      this.$router.push('/login')
-    }
-  },
-  watch: {
-    // Écoute les changements de route pour mettre à jour l'état de connexion
-    $route () {
-      this.isLoggedIn = localStorage.getItem('utilisateurConnecte') === 'true'
+      UserDataService.logout()
+        .then(() => {
+          localStorage.removeItem('token')
+          this.$store.dispatch('setUser', null)
+          this.$router.push({ name: 'login' })
+        })
     }
   }
 }

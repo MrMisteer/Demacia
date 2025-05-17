@@ -3,10 +3,10 @@
     <h2>Connexion</h2>
     <form @submit.prevent="handleLogin">
       <label for="email">Email :</label>
-      <input type="email" id="email" v-model="email" required />
+      <input type="email" id="email" v-model="user.email" required />
 
       <label for="password">Mot de passe :</label>
-      <input type="password" id="password" v-model="password" required />
+      <input type="password" id="password" v-model="user.password" required />
 
       <button type="submit" class="btn">Se connecter</button>
     </form>
@@ -15,38 +15,31 @@
 </template>
 
 <script>
-import axios from 'axios'
+import UserDataService from '@/services/UserDataService'
 
 export default {
   name: 'LoginView',
   data () {
     return {
-      email: '',
-      password: ''
+      user: {
+        email: '',
+        password: ''
+      }
+
     }
   },
   methods: {
-    async handleLogin () {
-      try {
-        const response = await axios.post('http://localhost:3000/api/login', {
-          email: this.email,
-          password: this.password
+    login () {
+      UserDataService.login(this.user)
+        .then(response => {
+          this.$store.dispatch('user', response.data.user)
+          this.$store.dispatch({ name: 'home' })
         })
-
-        const data = response.data
-
-        if (data.token) {
-          localStorage.setItem('utilisateurConnecte', 'true')
-          localStorage.setItem('token', data.token)
-          this.$router.push('/')
-        } else {
-          alert('Email ou mot de passe incorrect')
-        }
-      } catch (error) {
-        console.error('Erreur lors de la connexion vue:', error)
-        alert('Une erreur est survenue. Veuillez réessayer.')
-      }
+        .catch(e => {
+          console.log(e)
+        })
     }
+
   }
 }
 </script>

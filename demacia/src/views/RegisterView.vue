@@ -3,13 +3,13 @@
     <h2>Inscription</h2>
     <form @submit.prevent="handleRegister">
       <label for="nom">Nom :</label>
-      <input type="text" id="nom" v-model="nom" required />
+      <input type="text" id="nom" v-model="users.fullname" required />
 
       <label for="email">Email :</label>
-      <input type="email" id="email" v-model="email" required />
+      <input type="email" id="email" v-model="users.email" required />
 
       <label for="password">Mot de passe :</label>
-      <input type="password" id="password" v-model="password" required />
+      <input type="password" id="password" v-model="users.password" required />
 
       <button type="submit" class="btn">S'inscrire</button>
     </form>
@@ -18,39 +18,32 @@
 </template>
 
 <script>
-import axios from 'axios'
+
+import UserDataService from '@/services/UserDataService'
 
 export default {
   name: 'RegisterView',
   data () {
     return {
-      nom: '',
-      email: '',
-      password: ''
+      users: {
+        fullname: '',
+        email: '',
+        password: ''
+      }
     }
   },
   methods: {
-    async handleRegister () {
-      try {
-        const utilisateur = {
-          nom: this.nom,
-          email: this.email,
-          password: this.password
-        }
-
-        const response = await axios.post('http://localhost:3000/api/register', utilisateur)
-
-        if (response.status === 201) {
-          alert('Inscription réussie !')
-          this.$router.push('/login')
-        } else {
-          alert("Erreur lors de l'inscription. Veuillez réessayer.")
-        }
-      } catch (error) {
-        console.error("Erreur lors de l'inscription :", error)
-        alert('Une erreur est survenue. Veuillez réessayer.')
-      }
+    saveUser () {
+      UserDataService.create(this.users)
+        .then(response => {
+          console.log(response.data)
+          this.$router.push({ name: 'LoginView' })
+        })
+        .catch(e => {
+          console.log(e)
+        })
     }
+
   }
 }
 </script>

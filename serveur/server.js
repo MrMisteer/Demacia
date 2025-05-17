@@ -3,12 +3,16 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
 
+
+const cookieParser = require('cookie-parser')
+
 const corsOption = {
-    origin: 'http://localhost:8080',
-    credentials:true,
+    origin: 'http://localhost:8081/',
+    credentials: true, // authentication cookies
 }
 app.use(cors(corsOption))
 
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended:true }))
 //test
@@ -24,4 +28,6 @@ app.listen(PORT, () => {
 const db = require('./app/models')
 db.connex.sync()
 
+
 require('./app/routes/jeu.route')(app)
+require('./app/routes/user.route')(app)

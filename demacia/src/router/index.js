@@ -4,7 +4,6 @@ import CatalogueView from '../views/CatalogueView.vue'
 import FavorisView from '../views/FavorisView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
-import RechercheView from '../views/RechercheView.vue'
 
 const routes = [
   {
@@ -35,11 +34,6 @@ const routes = [
     name: 'login',
     component: LoginView,
     meta: { requiresAuth: false }
-  },
-  {
-    path: '/Recherche',
-    name: 'recherche',
-    component: RechercheView
   },
   {
     path: '/Register',

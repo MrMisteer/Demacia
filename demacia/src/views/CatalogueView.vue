@@ -2,6 +2,14 @@
   <div class="container">
     <h2>Nos Jeux</h2>
 
+    <!-- Barre de recherche -->
+    <input
+      v-model="recherche"
+      type="text"
+      placeholder="Rechercher un jeu..."
+      class="search-bar"
+    />
+
     <!-- État de chargement -->
     <div v-if="loading" class="loading">
       Chargement des jeux...
@@ -15,7 +23,7 @@
     <!-- Liste des jeux -->
     <div v-else class="cards">
       <div
-        v-for="jeu in jeux"
+        v-for="jeu in jeuxFiltres"
         :key="jeu.id"
         class="card"
       >
@@ -48,12 +56,23 @@ export default {
       utilisateurConnecte: false,
       jeux: [],
       loading: false,
-      error: null
+      error: null,
+      recherche: ''
     }
   },
   mounted () {
     this.retrieveJeux()
     this.utilisateurConnecte = localStorage.getItem('utilisateurConnecte') === 'true'
+  },
+  computed: {
+    jeuxFiltres () {
+      if (!this.recherche) return this.jeux
+      const rechercheMin = this.recherche.toLowerCase()
+      return this.jeux.filter(jeu =>
+        (jeu.nom_jeu && jeu.nom_jeu.toLowerCase().includes(rechercheMin)) ||
+        (jeu.description && jeu.description.toLowerCase().includes(rechercheMin))
+      )
+    }
   },
   methods: {
     async retrieveJeux () {
@@ -94,6 +113,16 @@ export default {
 <style scoped>
 .container {
   padding: 40px;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 25px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 .cards {
