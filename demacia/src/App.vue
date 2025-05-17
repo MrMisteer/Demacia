@@ -11,7 +11,7 @@
       </div>
       <div class="auth-buttons">
         <input type="text" class="search-bar" placeholder="Search" />
-        <router-link v-if="!isLoggedIn" to="/Signup" class="signup">Sign Up</router-link>
+        <router-link v-if="!isLoggedIn" to="/Register" class="signup">Sign Up</router-link>
         <router-link v-if="!isLoggedIn" to="/Login" class="login">Log In</router-link>
         <button v-if="isLoggedIn" @click="logout" class="logout">Log Out</button>
       </div>
