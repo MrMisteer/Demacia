@@ -2,6 +2,7 @@
   <div>
     <header>
       <h1>Demacia</h1>
+<<<<<<< Updated upstream
       <nav class="navbar">
         <div class="nav-links">
           <router-link to="/" role="button">Accueil</router-link>
@@ -24,6 +25,29 @@
       </nav>
     </header>
     <router-view />
+=======
+      <nav>
+        <router-link to="/" role="button">Accueil</router-link>
+        <router-link to="/Catalogue" role="button">Nos Jeux</router-link>
+        <router-link to="/Recherche" role="button">Recherche</router-link>
+        <router-link to="/About" role="button">À propos</router-link>
+        <router-link v-if="user" to="/Favoris">Mes Favoris</router-link>
+        <router-link v-if="!user" to="/Login" class="btn" >
+          Se connecter
+        </router-link>
+        <button
+          v-else
+          class="btn"
+          @click="logout"
+        >
+          Se déconnecter
+        </button>
+      </nav>
+    </header>
+
+    <router-view
+    :user = "user" />
+>>>>>>> Stashed changes
   </div>
 </template>
 
@@ -37,22 +61,41 @@ export default {
     }
   },
   created () {
+<<<<<<< Updated upstream
     UserDataService.getAuth()
       .then(response => {
         this.$store.dispatch('setUser', response.data)
       })
       .catch(error => {
         this.$store.dispatch('setUser', null)
+=======
+    // Vérifie dans le localStorage si l’utilisateur est connecté
+    UserDataService.getAuth()
+      .then(response => {
+        this.name = response.data.fullname
+        this.$store.dispatch('user', response.data)
+      })
+      .catch(error => {
+        this.$store.dispatch('user', null)
+>>>>>>> Stashed changes
         console.error('Erreur lors de la récupération de l’utilisateur:', error)
       })
   },
   methods: {
     logout () {
+<<<<<<< Updated upstream
       UserDataService.logout()
         .then(() => {
           localStorage.removeItem('token')
           this.$store.dispatch('setUser', null)
           this.$router.push({ name: 'login' })
+=======
+      UserDataService.getLogout()
+        .then(response => {
+          localStorage.removeItem('token')
+          this.$store.dispatch('user', null)
+          this.$router.push('login')
+>>>>>>> Stashed changes
         })
     }
   }
