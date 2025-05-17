@@ -7,7 +7,7 @@ const app = express()
 const cookieParser = require('cookie-parser')
 
 const corsOption = {
-    origin: 'http://localhost:8081/',
+    origin: 'http://localhost:8080',
     credentials: true, // authentication cookies
 }
 app.use(cors(corsOption))
@@ -31,3 +31,4 @@ db.connex.sync()
 
 require('./app/routes/jeu.route')(app)
 require('./app/routes/user.route')(app)
+require('./app/routes/favoris.route')(app)

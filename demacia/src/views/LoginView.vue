@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2>Connexion</h2>
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="login">
       <label for="email">Email :</label>
       <input type="email" id="email" v-model="user.email" required />
 
@@ -32,8 +32,8 @@ export default {
     login () {
       UserDataService.login(this.user)
         .then(response => {
-          this.$store.dispatch('user', response.data.user)
-          this.$store.dispatch({ name: 'home' })
+          this.$store.dispatch('setUser', response.data.user)
+          this.$router.push({ name: 'Accueil' })
         })
         .catch(e => {
           console.log(e)

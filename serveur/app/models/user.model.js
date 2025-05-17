@@ -12,7 +12,10 @@ module.exports = (connex, Sequelize) => {
         token: {
             type: Sequelize.STRING
         }
-    }, { timestamps: true });
+    }, { 
+        timestamps: true,
+        freezeTableName: true
+     });
 
     return User;
 };

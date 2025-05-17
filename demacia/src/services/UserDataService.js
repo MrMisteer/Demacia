@@ -1,7 +1,11 @@
 import http from '../http-common'
 class UserDataService {
+  create (data) {
+    return http.post('/user', data)
+  }
+
   login (data) {
-    return http.post('/login', data)
+    return http.post('/user/login', data)
   }
 
   register (data) {
@@ -13,7 +17,7 @@ class UserDataService {
   }
 
   logout () {
-    return http.get('/logout')
+    return http.get('/user/logout')
   }
 }
 export default new UserDataService()

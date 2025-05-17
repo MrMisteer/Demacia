@@ -30,7 +30,7 @@
         <img
           :src="jeu.photo"
           :alt="jeu.nom_jeu"
-          @error="$event.target.src = 'chemin/vers/image/par/defaut.jpg'"
+          @error="$event.target.src = '/defaut.jpg'"
         />
         <h3>{{ jeu.nom_jeu || 'Sans titre' }}</h3>
         <p>{{ jeu.description || 'Aucune description disponible' }}</p>
@@ -48,21 +48,17 @@
 
 <script>
 import JeuDataService from '@/services/JeuDataService'
+import FavorisDataService from '@/services/FavorisDataService'
 
 export default {
   name: 'CatalogueView',
   data () {
     return {
-      utilisateurConnecte: false,
       jeux: [],
       loading: false,
       error: null,
       recherche: ''
     }
-  },
-  mounted () {
-    this.retrieveJeux()
-    this.utilisateurConnecte = localStorage.getItem('utilisateurConnecte') === 'true'
   },
   computed: {
     jeuxFiltres () {
@@ -72,7 +68,17 @@ export default {
         (jeu.nom_jeu && jeu.nom_jeu.toLowerCase().includes(rechercheMin)) ||
         (jeu.description && jeu.description.toLowerCase().includes(rechercheMin))
       )
+    },
+    utilisateurConnecte () {
+      // Utilise Vuex pour vérifier la connexion
+      return !!this.$store.getters.user
+    },
+    utilisateurId () {
+      return this.$store.getters.user ? this.$store.getters.user.id : null
     }
+  },
+  mounted () {
+    this.retrieveJeux()
   },
   methods: {
     async retrieveJeux () {
@@ -96,15 +102,19 @@ export default {
         alert('Vous devez être connecté pour ajouter aux favoris.')
         return
       }
-      const favorisActuels = JSON.parse(localStorage.getItem('mesFavoris')) || []
-      const existeDeja = favorisActuels.some(j => j.id === jeu.id)
-      if (!existeDeja) {
-        favorisActuels.push(jeu)
-        localStorage.setItem('mesFavoris', JSON.stringify(favorisActuels))
-        alert(`Jeu "${jeu.nom}" ajouté à vos favoris ✅`)
-      } else {
-        alert('Ce jeu est déjà dans vos favoris.')
+      // Prépare les données à envoyer à l'API, avec Id_user
+      const data = {
+        Id_jeu: jeu.Id_jeu,
+        Id_user: this.utilisateurId, // Ajout de l'utilisateur connecté
+        Date_ajout: new Date().toISOString().slice(0, 10) // format YYYY-MM-DD
       }
+      FavorisDataService.create(data)
+        .then(() => {
+          alert(`Jeu "${jeu.nom_jeu}" ajouté à vos favoris ✅`)
+        })
+        .catch(() => {
+          alert('Erreur lors de l\'ajout aux favoris (déjà ajouté ?)')
+        })
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2>Inscription</h2>
-    <form @submit.prevent="handleRegister">
+    <form @submit.prevent="saveUser">
       <label for="nom">Nom :</label>
       <input type="text" id="nom" v-model="users.fullname" required />
 
@@ -37,7 +37,7 @@ export default {
       UserDataService.create(this.users)
         .then(response => {
           console.log(response.data)
-          this.$router.push({ name: 'LoginView' })
+          this.$router.push({ name: 'login' })
         })
         .catch(e => {
           console.log(e)

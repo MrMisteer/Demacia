@@ -2,23 +2,24 @@
   <div class="container">
     <h2>Mes Favoris</h2>
     <div v-if="favoris.length === 0">
-      <p>Aucune recette n'a encore été ajoutée aux favoris.</p>
+      <p>Aucun favori n'a encore été ajouté.</p>
     </div>
     <div class="cards" v-else>
-      <div v-for="recette in favoris" :key="recette.id" class="card">
-        <img :src="recette.image_url" :alt="recette.nom">
-        <h3>{{ recette.nom }}</h3>
-        <p>{{ recette.description }}</p>
-        <p><strong>Saison :</strong> {{ recette.season }}</p>
-        <p><strong>CO2 :</strong> {{ recette.carbon_footprint }}</p>
-        <p><strong>Personnes :</strong> {{ recette.personnes }}</p>
-        <button class="btn" @click="retirerFavori(recette.id)">Retirer des favoris</button>
+      <div v-for="favori in favoris" :key="favori.Id_favoris" class="card">
+        <img :src="favori.photo" :alt="favori.nom_jeu">
+        <h3>{{ favori.nom_jeu }}</h3>
+        <p>{{ favori.description }}</p>
+        <p><strong>Date d'ajout :</strong> {{ favori.Date_ajout }}</p>
+        <button class="btn" @click="retirerFavori(favori.Id_favoris)">Retirer des favoris</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import FavorisDataService from '@/services/FavorisDataService'
+import JeuDataService from '@/services/JeuDataService'
+
 export default {
   name: 'FavorisView',
   data () {
@@ -26,14 +27,32 @@ export default {
       favoris: []
     }
   },
-  mounted () {
-    const favorisStockes = localStorage.getItem('mesFavoris')
-    this.favoris = favorisStockes ? JSON.parse(favorisStockes) : []
+  computed: {
+    utilisateurId () {
+      // On suppose que l'utilisateur est stocké dans le store Vuex
+      return this.$store.getters.user ? this.$store.getters.user.id : null
+    }
+  },
+  async mounted () {
+    if (!this.utilisateurId) {
+      this.favoris = []
+      return
+    }
+    // Récupère les favoris de l'utilisateur connecté
+    const response = await FavorisDataService.getAllByUser(this.utilisateurId)
+    // Pour chaque favori, récupère les infos du jeu associé
+    const favorisAvecJeux = await Promise.all(
+      response.data.map(async favori => {
+        const jeu = await JeuDataService.get(favori.Id_jeu)
+        return { ...favori, ...jeu.data }
+      })
+    )
+    this.favoris = favorisAvecJeux
   },
   methods: {
-    retirerFavori (id) {
-      this.favoris = this.favoris.filter(recette => recette.id !== id)
-      localStorage.setItem('mesFavoris', JSON.stringify(this.favoris))
+    async retirerFavori (id) {
+      await FavorisDataService.delete(id)
+      this.favoris = this.favoris.filter(favori => favori.Id_favoris !== id)
     }
   }
 }
@@ -74,6 +93,5 @@ export default {
   margin-top: 10px;
   width: 100%;
   font-size: 1rem;
-
 }
 </style>

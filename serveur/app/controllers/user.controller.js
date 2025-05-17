@@ -2,7 +2,7 @@ const db = require('../models')
 const userModel = require('../models/user.model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const User = db.users
+const User = db.user
 //const OP = db.Sequelize.Op
 const https = require('http')
 
@@ -16,7 +16,7 @@ exports.findAll = (req, res) => {
 exports.create = async (req, res) => {
     if (!req.body.fullname || !req.body.email || !req.body.password) {
         res.status(400).send({
-            message: "User must have name, email and phone!"
+            message: "User must have fullname, email and password!"
         })
         return;
     }
@@ -70,26 +70,28 @@ exports.findOne = async (req, res, next) => {
 }
 
 exports.auth = async (req, res) => {
-        try {
-            const cookie = req.cookies['jwt']
-            const claims = jwt.verify(cookie, 'secret')
-    
-            if (!claims) {
-                return res.status(401).send({
-                    message: 'unauthenticated'
-                })
-            }
-    
-            const user = await User.findOne({id: claims.id})
-            const {password, ...data} = await user.toJSON()
-            //console.log(data)
-            res.send(data)
+    try {
+        const cookie = req.cookies['jwt']
+        const claims = jwt.verify(cookie, 'secret')
 
-        } catch (e) {
+        if (!claims) {
             return res.status(401).send({
                 message: 'unauthenticated'
             })
         }
+
+        const user = await User.findOne({ where: { id: claims.id } })
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' })
+        }
+        const { password, ...data } = await user.toJSON()
+        res.send(data)
+
+    } catch (e) {
+        return res.status(401).send({
+            message: 'unauthenticated'
+        })
+    }
 }
 
 exports.logout = async (req, res) => {

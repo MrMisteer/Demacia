@@ -5,17 +5,15 @@ export default createStore({
     user: null
   },
   getters: {
-    user: (state) => {
-      return state.user
-    }
+    user: (state) => state.user
   },
   actions: {
-    user (context, user) {
-      context.commit('user', user)
+    setUser (context, user) {
+      context.commit('setUser', user)
     }
   },
   mutations: {
-    user (state, user) {
+    setUser (state, user) {
       state.user = user
     }
   }
