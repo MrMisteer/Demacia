@@ -8,7 +8,6 @@
           <router-link to="/Catalogue" role="button">Nos Jeux</router-link>
           <router-link v-if="isLoggedIn" to="/Favoris">Mes Favoris</router-link>
           <router-link v-if="isAdmin" to="/admin">Gestion</router-link>
-          <router-link to="/About" role="button">À propos</router-link>
         </div>
         <div class="auth-buttons">
           <router-link v-if="!isLoggedIn" to="/Login" class="login btn">

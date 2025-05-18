@@ -3,8 +3,9 @@
     <!-- Section Jeu de la Semaine -->
     <section class="game-of-the-week">
       <div class="game-info">
-        <h1>Jeu de la Semaine<br>Note : 9.54/10</h1>
-        <p>
+        <h2 class="section-title">Jeu de la Semaine</h2>
+        <p class="note">Note : <strong>9.54/10</strong></p>
+        <p class="description">
           Jeu de société classique de gestion de propriétés
         </p>
       </div>
@@ -15,15 +16,14 @@
 
     <!-- Section Jeux les plus populaires -->
     <section class="popular-games">
-      <h2>Jeux les plus populaires</h2>
+      <h2 class="section-title">Jeux les plus populaires</h2>
       <div class="game-thumbnails">
-        <div class="thumbnail"></div>
-        <div class="thumbnail"></div>
-        <div class="thumbnail"></div>
-        <div class="thumbnail"></div>
-        <div class="thumbnail"></div>
+        <div v-for="n in 5" :key="n" class="thumbnail">
+          <img src="https://via.placeholder.com/100x100?text=Jeu" alt="jeu" />
+          <p>Jeu {{ n }}</p>
+        </div>
       </div>
-      <p class="footer">Join over 1 000 000 customers worldwide</p>
+      <p class="footer">Rejoignez plus d’un million de joueurs dans le monde !</p>
     </section>
   </div>
 </template>
@@ -35,71 +35,109 @@ export default {
 </script>
 
 <style scoped>
-/* Section Jeu de la Semaine */
+.container {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to bottom, #ffffff, #fef6e4);
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+/* ==== Jeu de la Semaine ==== */
 .game-of-the-week {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 2rem;
+  background: #f1f8e9;
   padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.game-info {
-  max-width: 50%;
-}
-
-.game-info h1 {
+.section-title {
   font-size: 2rem;
+  font-weight: 700;
   margin-bottom: 1rem;
+  color: #2e7d32;
 }
 
-.game-info p {
-  margin-bottom: 1.5rem;
-  color: #555;
+.note {
+  font-size: 1.25rem;
+  color: #33691e;
 }
 
-.game-info button {
-  padding: 0.75rem 1.5rem;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.game-info button:hover {
-  background-color: #555;
+.description {
+  color: #444;
+  margin-top: 1rem;
 }
 
 .game-image img {
-  max-width: 100%;
-  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Section Jeux les plus populaires */
+/* ==== Jeux les plus populaires ==== */
 .popular-games {
-  text-align: center;
-  margin-top: 3rem;
-}
-
-.popular-games h2 {
-  margin-bottom: 2rem;
+  background-color: #e3f2fd;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
 }
 
 .popular-games .game-thumbnails {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
-.popular-games .thumbnail {
-  width: 100px;
+.thumbnail {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.thumbnail:hover {
+  transform: translateY(-5px);
+  background-color: #bbdefb;
+}
+
+.thumbnail img {
+  width: 100%;
   height: 100px;
-  background-color: #ddd;
+  object-fit: cover;
   border-radius: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .footer {
   margin-top: 2rem;
-  color: #777;
+  color: #555;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+/* === Navigation (ajout de contours) === */
+nav a, .navbar button {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 0 5px;
+  text-decoration: none;
+  color: #333;
+  background-color: #fefefe;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+nav a:hover, .navbar button:hover {
+  background-color: #eeeeee;
+  border-color: #aaa;
 }
 </style>

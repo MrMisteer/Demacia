@@ -21,13 +21,14 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome' })
 })
 
-// Connexion BDD + création admin
+// Connexion BDD + création admin + indexation
 const db = require('./app/models')
 db.connex.sync().then(async () => {
   const User = db.user
+  const sequelize = db.connex
 
+  // Création d’un admin par défaut si pas déjà présent
   const existingAdmin = await User.findOne({ where: { email: 'admin@admin.com' } })
-
   if (!existingAdmin) {
     const hash = await bcrypt.hash('admin123', 10)
 
@@ -37,14 +38,23 @@ db.connex.sync().then(async () => {
       password: hash,
       role: 'admin'
     })
-
     console.log('Admin créé : admin@admin.com / admin123')
   } else {
-    console.log('Admin déjà présent en base')
+    console.log('ℹAdmin déjà présent en base')
+  }
+
+  // Création des index pour optimiser les requêtes
+  try {
+    await sequelize.query(`CREATE INDEX IF NOT EXISTS idx_nom_jeu ON Jeu(Nom_jeu);`)
+    await sequelize.query(`CREATE INDEX IF NOT EXISTS idx_commentaires_jeu ON Commentaires(Id_jeu);`)
+    await sequelize.query(`CREATE INDEX IF NOT EXISTS idx_mettre_utilisateur ON Mettre(Id_utilisateur);`)
+    console.log('Index créés avec succès')
+  } catch (err) {
+    console.error('Erreur lors de la création des index :', err)
   }
 })
 
-// Routes de l'application (doivent être AVANT app.listen)
+// Routes de l'application
 require('./app/routes/jeu.route')(app)
 require('./app/routes/user.route')(app)
 require('./app/routes/favoris.route')(app)
