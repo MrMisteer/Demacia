@@ -32,7 +32,7 @@ export default {
     login () {
       UserDataService.login(this.user)
         .then(response => {
-          console.log('✅ Connexion réussie', response.data)
+          console.log('Connexion réussie', response.data)
           const user = response.data.user
           const token = response.data.token
 
@@ -50,7 +50,7 @@ export default {
           }
         })
         .catch(e => {
-          console.error('❌ Erreur détectée dans le login :', e.response?.status)
+          console.error('Erreur détectée dans le login :', e.response?.status)
           console.error('Détails :', e.response?.data || e.message)
           alert('Erreur de connexion')
         })

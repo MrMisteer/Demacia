@@ -38,9 +38,9 @@ db.connex.sync().then(async () => {
       role: 'admin'
     })
 
-    console.log('✅ Admin créé : admin@admin.com / admin123')
+    console.log('Admin créé : admin@admin.com / admin123')
   } else {
-    console.log('ℹ️ Admin déjà présent en base')
+    console.log('Admin déjà présent en base')
   }
 })
 

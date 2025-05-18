@@ -5,13 +5,11 @@
       <div class="game-info">
         <h1>Jeu de la Semaine<br>Note : 9.54/10</h1>
         <p>
-          Supporting statement for your product's tagline. This text should
-          communicate your unique selling proposition to the reader.
+          Jeu de société classique de gestion de propriétés
         </p>
-        <button>AJOUTER À LA LISTE</button>
       </div>
       <div class="game-image">
-        <img src="https://via.placeholder.com/400x300" alt="Jeu de la semaine" />
+        <img src="https://www.regles-de-jeux.com/wp-content/uploads/2014/03/regle-monopoly.jpg" alt="Jeu de la semaine" />
       </div>
     </section>
 

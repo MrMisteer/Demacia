@@ -1,6 +1,8 @@
 <template>
   <div class="admin-container">
     <h1>Espace Administrateur</h1>
+
+    <!-- Tableau des utilisateurs -->
     <table v-if="users.length > 0">
       <thead>
         <tr>
@@ -18,12 +20,38 @@
           <td>{{ user.email }}</td>
           <td>{{ user.role }}</td>
           <td>
-            <button @click="supprimerUtilisateur(user.id)">🗑️ Supprimer</button>
+            <button @click="supprimerUtilisateur(user.id)">Supprimer</button>
           </td>
         </tr>
       </tbody>
     </table>
     <p v-else>Aucun utilisateur à afficher.</p>
+
+    <!-- Tableau des jeux -->
+    <h2>Liste des Jeux</h2>
+    <table v-if="games.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom</th>
+          <th>Catégorie</th>
+          <th>Durée</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="jeu in games" :key="jeu.Id_jeu">
+          <td>{{ jeu.Id_jeu }}</td>
+          <td>{{ jeu.nom_jeu }}</td>
+          <td>{{ jeu.categorie }}</td>
+          <td>{{ jeu.duree_mini }} - {{ jeu.duree_max }}</td>
+          <td>
+            <button @click="deleteGame(jeu.Id_jeu)" class="btn-suppr">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p v-else>Aucun jeu à afficher.</p>
   </div>
 </template>
 
@@ -33,17 +61,14 @@ import axios from 'axios'
 import UserDataService from '@/services/UserDataService'
 
 const users = ref([])
+const games = ref([])
 
 onMounted(() => {
-  axios.get('http://localhost:8081/api/user/admin/all-users', {
-    withCredentials: true
-  })
-    .then(res => {
-      users.value = res.data
-    })
-    .catch(err => {
-      console.error('Accès refusé ou erreur serveur', err)
-    })
+  axios.get('http://localhost:8081/api/user/admin/all-users', { withCredentials: true })
+    .then(res => { users.value = res.data })
+    .catch(err => console.error('Accès refusé ou erreur serveur', err))
+
+  fetchGames()
 })
 
 function supprimerUtilisateur (id) {
@@ -54,6 +79,27 @@ function supprimerUtilisateur (id) {
       })
       .catch(err => {
         console.error('Erreur lors de la suppression :', err)
+      })
+  }
+}
+
+function fetchGames () {
+  axios.get('http://localhost:8081/api/jeu', { withCredentials: true })
+    .then(res => {
+      games.value = res.data.map(j => j.dataValues || j)
+    })
+    .catch(err => console.error('Erreur lors de la récupération des jeux', err))
+}
+
+function deleteGame (id) {
+  if (confirm('Voulez-vous vraiment supprimer ce jeu ?')) {
+    axios.delete(`http://localhost:8081/api/jeu/admin/delete/${id}`, { withCredentials: true })
+      .then(() => {
+        games.value = games.value.filter(j => j.Id_jeu !== id)
+      })
+      .catch(err => {
+        alert('Erreur lors de la suppression')
+        console.error(err)
       })
   }
 }
@@ -85,6 +131,18 @@ button {
   border-radius: 4px;
 }
 button:hover {
+  background-color: darkred;
+}
+.btn-suppr {
+  background-color: red;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-suppr:hover {
   background-color: darkred;
 }
 </style>
