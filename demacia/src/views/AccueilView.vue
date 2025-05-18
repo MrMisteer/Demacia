@@ -16,15 +16,31 @@
 
     <!-- Section Jeux les plus populaires -->
     <section class="popular-games">
-      <h2 class="section-title">Jeux les plus populaires</h2>
-      <div class="game-thumbnails">
-        <div v-for="n in 5" :key="n" class="thumbnail">
-          <img src="https://via.placeholder.com/100x100?text=Jeu" alt="jeu" />
-          <p>Jeu {{ n }}</p>
-        </div>
-      </div>
-      <p class="footer">Rejoignez plus d’un million de joueurs dans le monde !</p>
-    </section>
+  <h2 class="section-title">Jeux les plus populaires</h2>
+  <div class="game-thumbnails">
+    <div class="thumbnail">
+      <img src="https://www.regles-de-jeux.com/wp-content/uploads/2014/03/regle-monopoly.jpg" alt="Monopoly" />
+      <p>Monopoly</p>
+    </div>
+    <div class="thumbnail">
+      <img src="https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_CatanConsoleEdition.jpg" alt="Catan" />
+      <p>Catan</p>
+    </div>
+    <div class="thumbnail">
+      <img src="https://cdn.svc.asmodee.net/production-rprod/storage/games/7-wonders/sev-content-159243209212Feq.png" alt="7 Wonders" />
+      <p>7 Wonders</p>
+    </div>
+    <div class="thumbnail">
+      <img src="https://lagranderecre-lagranderecre-fr-storage.omn.proximis.com/Imagestorage/images/0/0/6103b33eaa2fb_PBAZU01FR_EAN_826956620105_1_.jpg" alt="Azul" />
+      <p>Azul</p>
+    </div>
+    <div class="thumbnail">
+      <img src="https://www.vindjeu.eu/prd/wp-content/uploads/2014/09/833-Risk-2.jpg" alt="Risk" />
+      <p>Risk</p>
+    </div>
+  </div>
+  <p class="footer">Rejoignez plus d’un million de joueurs dans le monde !</p>
+</section>
   </div>
 </template>
 
@@ -90,7 +106,7 @@ export default {
 
 .popular-games .game-thumbnails {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
 }
@@ -111,7 +127,7 @@ export default {
 
 .thumbnail img {
   width: 100%;
-  height: 100px;
+  height: 160px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 0.5rem;

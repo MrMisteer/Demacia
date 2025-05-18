@@ -123,68 +123,110 @@ export default {
 <style scoped>
 .container {
   padding: 40px;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to bottom, #ffffff, #f3f4f6);
+  min-height: 100vh;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
 }
 
 .search-bar {
   width: 100%;
-  max-width: 400px;
-  padding: 10px;
-  margin-bottom: 25px;
-  border-radius: 5px;
+  max-width: 450px;
+  padding: 12px 15px;
+  margin-bottom: 30px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
+  background-color: #f9fafb;
+  transition: border-color 0.2s ease;
+}
+
+.search-bar:focus {
+  border-color: #6366f1;
+  outline: none;
 }
 
 .cards {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
 }
 
 .card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  width: 280px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card img {
   width: 100%;
-  height: 150px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin: 8px 0;
+  flex-grow: 1;
 }
 
 .btn {
-  background: black;
+  background: #111827;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 0;
   border: none;
   cursor: pointer;
-  margin-top: 10px;
-  width: 100%;
-  font-size: 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
 
-.loading {
-  text-align: center;
-  padding: 20px;
-  font-size: 1.2rem;
-  color: #666;
-}
-
-.error {
-  text-align: center;
-  padding: 20px;
-  color: #dc3545;
-  background-color: #f8d7da;
-  border-radius: 4px;
-  margin: 20px 0;
+.btn:hover {
+  background-color: #1f2937;
 }
 
 .btn:disabled {
-  background: #ccc;
+  background: #9ca3af;
   cursor: not-allowed;
 }
+
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #b91c1c;
+  background-color: #fee2e2;
+  border-radius: 6px;
+  margin: 30px 0;
+}
+
 </style>
