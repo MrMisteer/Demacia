@@ -19,5 +19,13 @@ class UserDataService {
   logout () {
     return http.get('/user/logout')
   }
+
+  getUser () {
+    return http.get('/user')
+  }
+
+  deleteUser (id) {
+    return http.delete(`/user/${id}`)
+  }
 }
 export default new UserDataService()

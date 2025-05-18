@@ -32,14 +32,29 @@ export default {
     login () {
       UserDataService.login(this.user)
         .then(response => {
-          this.$store.dispatch('setUser', response.data.user)
-          this.$router.push({ name: 'Accueil' })
+          console.log('✅ Connexion réussie', response.data)
+          const user = response.data.user
+          const token = response.data.token
+
+          // Stockage dans localStorage
+          localStorage.setItem('user', JSON.stringify({ ...user, token }))
+
+          // Optionnel : Vuex si tu veux
+          this.$store.dispatch('setUser', user)
+
+          // Redirection selon rôle
+          if (user.role === 'admin') {
+            this.$router.push({ name: 'Admin' }) // vers AdminView.vue
+          } else {
+            this.$router.push({ name: 'Accueil' }) // vers AccueilView.vue
+          }
         })
         .catch(e => {
-          console.log(e)
+          console.error('❌ Erreur détectée dans le login :', e.response?.status)
+          console.error('Détails :', e.response?.data || e.message)
+          alert('Erreur de connexion')
         })
     }
-
   }
 }
 </script>

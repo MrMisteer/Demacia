@@ -3,6 +3,8 @@ const userModel = require('../models/user.model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = db.user
+
+
 //const OP = db.Sequelize.Op
 const https = require('http')
 
@@ -38,15 +40,18 @@ exports.create = async (req, res) => {
 }
 
 exports.findOne = async (req, res, next) => {
+    console.log('Tentative de login :', req.body.email)
     const user = await User.findOne({where: {email:req.body.email}})
 
     if(!user){
+        console.log('Utilisateur introuvable')
         return res.status(400).send({
             message: 'Username not found'
            })
     }
 
     if(!await bcrypt.compare(req.body.password, user.password)){
+        console.log(' Mot de passe incorrect')
         return res.status(400).send({
             message: 'password incorrect'
            })
@@ -56,20 +61,27 @@ exports.findOne = async (req, res, next) => {
     //withCredentials = true on the client side (http)
     res.cookie('jwt', token,{
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000,
+        sameSite: 'lax'
     })
-
+    console.log('cookie envoyé')
     user.update({
             token: token
         })
         const {password, ...data} = await user.toJSON()
     res.send({
         token: token,
-        user: data
+        user: {
+            id: user.id,
+            fullname: user.fullname,
+            email: user.email,
+            role: user.role 
+        }
     })
 }
 
 exports.auth = async (req, res) => {
+    console.log('cookies reçus :', req.cookies)
     try {
         const cookie = req.cookies['jwt']
         const claims = jwt.verify(cookie, 'secret')
@@ -100,4 +112,18 @@ exports.logout = async (req, res) => {
     res.send({
         message: 'success'
     })
+}
+
+exports.deleteOne = async (req, res) => {
+  try {
+    const id = req.params.id
+    const deleted = await User.destroy({ where: { id } })
+    if (deleted) {
+      res.send({ message: 'Utilisateur supprimé avec succès' })
+    } else {
+      res.status(404).send({ message: 'Utilisateur non trouvé' })
+    }
+  } catch (error) {
+    res.status(500).send({ message: 'Erreur serveur', error })
+  }
 }

@@ -4,6 +4,7 @@ import CatalogueView from '../views/CatalogueView.vue'
 import FavorisView from '../views/FavorisView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import AdminView from '@/views/AdminView.vue'
 
 const routes = [
   {
@@ -39,6 +40,12 @@ const routes = [
     path: '/Register',
     name: 'register',
     component: RegisterView
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminView,
+    meta: { requiresAdmin: true }
   }
 ]
 
@@ -47,4 +54,13 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const user = JSON.parse(localStorage.getItem('user'))
+
+  if (to.meta.requiresAdmin && user?.role !== 'admin') {
+    next('/login')
+  } else {
+    next()
+  }
+})
 export default router

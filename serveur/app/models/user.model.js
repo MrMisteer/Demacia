@@ -11,7 +11,11 @@ module.exports = (connex, Sequelize) => {
         },
         token: {
             type: Sequelize.STRING
-        }
+        },
+        role: {
+            type: Sequelize.STRING,
+            defaultValue: "user"
+    }
     }, { 
         timestamps: true,
         freezeTableName: true

@@ -5,7 +5,9 @@ export default createStore({
     user: null
   },
   getters: {
-    user: (state) => state.user
+    user: (state) => state.user,
+    isLoggedIn: (state) => !!state.user,
+    isAdmin: (state) => state.user?.role === 'admin'
   },
   actions: {
     setUser (context, user) {
