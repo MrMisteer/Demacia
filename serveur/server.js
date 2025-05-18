@@ -40,24 +40,24 @@ db.connex.sync().then(async () => {
     })
     console.log('Admin créé : admin@admin.com / admin123')
   } else {
-    console.log('ℹAdmin déjà présent en base')
+    console.log('Admin déjà présent en base')
   }
 
   // Création des index pour optimiser les requêtes
-  try {
-    await sequelize.query(`CREATE INDEX IF NOT EXISTS idx_nom_jeu ON Jeu(Nom_jeu);`)
-    await sequelize.query(`CREATE INDEX IF NOT EXISTS idx_commentaires_jeu ON Commentaires(Id_jeu);`)
-    await sequelize.query(`CREATE INDEX IF NOT EXISTS idx_mettre_utilisateur ON Mettre(Id_utilisateur);`)
-    console.log('Index créés avec succès')
-  } catch (err) {
-    console.error('Erreur lors de la création des index :', err)
-  }
+    // Création des index (en MySQL, pas de IF NOT EXISTS — on ignore l'erreur si déjà existant)
+  sequelize.query(`CREATE INDEX idx_nom_jeu ON Jeu(nom_jeu);`).catch(() => {})
+  sequelize.query(`CREATE INDEX idx_commentaires_jeu ON Commentaires(Id_jeu);`).catch(() => {})
+  sequelize.query(`CREATE INDEX idx_mettre_utilisateur ON Mettre(Id_utilisateur);`).catch(() => {})
+  
+
 })
 
 // Routes de l'application
 require('./app/routes/jeu.route')(app)
 require('./app/routes/user.route')(app)
 require('./app/routes/favoris.route')(app)
+require('./app/routes/commentaire.route')(app)
+
 
 // Lancement du serveur
 const PORT = 8081

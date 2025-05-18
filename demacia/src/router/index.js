@@ -5,6 +5,7 @@ import FavorisView from '../views/FavorisView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import AdminView from '@/views/AdminView.vue'
+import CommentaireView from '@/views/CommentaireView.vue'
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     name: 'Admin',
     component: AdminView,
     meta: { requiresAdmin: true }
+  },
+  {
+    path: '/commentaire',
+    name: 'Commentaire',
+    component: CommentaireView
   }
 ]
 

@@ -6,6 +6,7 @@
         <div class="nav-links">
           <router-link to="/" role="button">Accueil</router-link>
           <router-link to="/Catalogue" role="button">Nos Jeux</router-link>
+          <router-link to="/commentaire" role="button">Commentaire</router-link>
           <router-link v-if="isLoggedIn" to="/Favoris">Mes Favoris</router-link>
           <router-link v-if="isAdmin" to="/admin">Gestion</router-link>
         </div>
