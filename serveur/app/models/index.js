@@ -25,6 +25,7 @@ db.connex = connex;
 db.jeu = require('./jeu.model.js')(connex, Sequelize);
 db.user = require('./user.model.js')(connex, Sequelize);
 db.favoris = require('./favoris.model.js')(connex, Sequelize);
+db.commentaires = require('./commentaire.model.js')(connex, Sequelize);
 
 // Exportation
 module.exports = db;

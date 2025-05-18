@@ -4,6 +4,7 @@ import CatalogueView from '../views/CatalogueView.vue'
 import FavorisView from '../views/FavorisView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import CommentaireView from '../views/CommentaireView.vue'
 
 const routes = [
   {
@@ -39,6 +40,11 @@ const routes = [
     path: '/Register',
     name: 'register',
     component: RegisterView
+  },
+  {
+    path: '/Commentaire/:id',
+    name: 'commentaire',
+    component: CommentaireView
   }
 ]
 
