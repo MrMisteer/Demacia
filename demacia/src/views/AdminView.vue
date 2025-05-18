@@ -52,6 +52,21 @@
       </tbody>
     </table>
     <p v-else>Aucun jeu à afficher.</p>
+
+    <!-- Formulaire d’ajout de jeu -->
+    <h2>Ajouter un jeu</h2>
+    <form @submit.prevent="ajouterJeu" class="form-ajout">
+      <input v-model="nouveauJeu.nom_jeu" placeholder="Nom du jeu" required />
+      <input v-model="nouveauJeu.photo" placeholder="URL de l'image" required />
+      <input v-model="nouveauJeu.description" placeholder="Description" required />
+      <input type="number" v-model.number="nouveauJeu.annee_sortie" placeholder="Année de sortie" required />
+      <input type="number" v-model.number="nouveauJeu.mini_player" placeholder="Joueurs minimum" required />
+      <input type="number" v-model.number="nouveauJeu.max_player" placeholder="Joueurs maximum" required />
+      <input type="time" v-model="nouveauJeu.duree_mini" placeholder="Durée minimale" required />
+      <input type="time" v-model="nouveauJeu.duree_max" placeholder="Durée maximale" required />
+      <input v-model="nouveauJeu.categorie" placeholder="Catégorie" required />
+      <button type="submit">Ajouter le jeu</button>
+    </form>
   </div>
 </template>
 
@@ -62,6 +77,17 @@ import UserDataService from '@/services/UserDataService'
 
 const users = ref([])
 const games = ref([])
+const nouveauJeu = ref({
+  nom_jeu: '',
+  photo: '',
+  description: '',
+  annee_sortie: '',
+  mini_player: '',
+  max_player: '',
+  duree_mini: '',
+  duree_max: '',
+  categorie: ''
+})
 
 onMounted(() => {
   axios.get('http://localhost:8081/api/user/admin/all-users', { withCredentials: true })
@@ -102,6 +128,28 @@ function deleteGame (id) {
         console.error(err)
       })
   }
+}
+
+function ajouterJeu () {
+  axios.post('http://localhost:8081/api/jeu', nouveauJeu.value, { withCredentials: true })
+    .then(() => {
+      alert('Jeu ajouté avec succès')
+      fetchGames()
+      nouveauJeu.value = {
+        nom_jeu: '',
+        photo: '',
+        description: '',
+        annee_sortie: '',
+        mini_player: '',
+        max_player: '',
+        duree_mini: '',
+        duree_max: '',
+        categorie: ''
+      }
+    })
+    .catch(err => {
+      console.error('Erreur lors de l’ajout du jeu :', err)
+    })
 }
 </script>
 
@@ -144,5 +192,16 @@ button:hover {
 }
 .btn-suppr:hover {
   background-color: darkred;
+}
+.form-ajout {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+.form-ajout input,
+.form-ajout button {
+  padding: 10px;
 }
 </style>

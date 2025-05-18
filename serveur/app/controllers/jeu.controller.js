@@ -1,7 +1,7 @@
 const db = require('../models')
 const Jeu = db.jeu
 
-//  Récupérer tous les jeux
+// Récupérer tous les jeux
 exports.findAll = (req, res) => {
   console.log('Requête reçue pour récupérer tous les jeux')
   Jeu.findAll()
@@ -17,23 +17,46 @@ exports.findAll = (req, res) => {
     })
 }
 
-//  Créer un jeu
+// Créer un jeu
 exports.create = (req, res) => {
-  if (!req.body.name) {
-    res.status(400).send({ message: 'Le nom est obligatoire' })
-    return
+  console.log('Reçu dans create() :', req.body)
+
+  const {
+    nom_jeu,
+    photo,
+    description,
+    annee_sortie,
+    mini_player,
+    max_player,
+    duree_mini,
+    duree_max,
+    categorie
+  } = req.body
+
+  if (!nom_jeu || !photo || !description || !annee_sortie || !mini_player || !max_player || !duree_mini || !duree_max || !categorie) {
+    return res.status(400).send({ message: 'Tous les champs sont requis' })
   }
 
-  Jeu.create(req.body)
-    .then(data => res.send(data))
+  db.jeu.create({
+    nom_jeu,
+    photo,
+    description,
+    annee_sortie,
+    mini_player,
+    max_player,
+    duree_mini,
+    duree_max,
+    categorie
+  })
+    .then(data => res.status(201).send(data))
     .catch(err => {
-      res.status(500).send({
-        message: 'Impossible d’insérer le jeu'
-      })
+      console.error('Erreur création jeu :', err)
+      res.status(500).send({ message: err.message || 'Erreur serveur' })
     })
 }
 
-//  Récupérer un jeu par ID
+
+// Récupérer un jeu par ID
 exports.findOne = (req, res) => {
   const id = req.params.id
   Jeu.findByPk(id)
@@ -45,11 +68,11 @@ exports.findOne = (req, res) => {
     })
 }
 
-//  Modifier un jeu
+// Modifier un jeu
 exports.update = (req, res) => {
   const id = req.params.id
   Jeu.update(req.body, {
-    where: { Id_jeu: id } 
+    where: { Id_jeu: id }
   })
     .then(num => {
       if (num == 1) {
@@ -65,11 +88,11 @@ exports.update = (req, res) => {
     })
 }
 
-
+// Supprimer un jeu
 exports.delete = (req, res) => {
   const id = req.params.id
   Jeu.destroy({
-    where: { Id_jeu: id } // 
+    where: { Id_jeu: id }
   })
     .then(num => {
       if (num == 1) {
