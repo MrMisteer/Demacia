@@ -114,6 +114,7 @@ exports.logout = async (req, res) => {
 // Supprimer un utilisateur via la procédure stockée
 exports.deleteOne = async (req, res) => {
   try {
+    console.log('Suppression de l\'utilisateur avec ID:', req.params.id)
     await db.query(
       "CALL supprimer_utilisateur(?)",[req.params.id]
     )
