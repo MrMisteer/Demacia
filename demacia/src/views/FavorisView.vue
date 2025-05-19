@@ -38,10 +38,13 @@ export default {
       this.favoris = []
       return
     }
+    // Récupère les favoris de l'utilisateur connecté
     const response = await FavorisDataService.getAllByUser(this.utilisateurId)
+    // Pour chaque favori, récupère les infos du jeu associé
     const favorisAvecJeux = await Promise.all(
       response.data.map(async favori => {
         const jeu = await JeuDataService.get(favori.Id_jeu)
+        // Formatage de la date d'ajout
         const date = new Date(favori.Date_ajout)
         const dateAjoutLisible = date.toLocaleDateString('fr-FR')
         return {
@@ -49,7 +52,7 @@ export default {
           nom_jeu: jeu.data.Nom_jeu,
           photo: jeu.data.Photo,
           description: jeu.data.Description,
-          dateAjoutLisible 
+          dateAjoutLisible // nouvelle propriété formatée
         }
       })
     )
