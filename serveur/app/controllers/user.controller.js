@@ -14,16 +14,21 @@ exports.findAll = async (req, res) => {
 
 // Créer un utilisateur via la procédure stockée
 exports.create = async (req, res) => {
+    console.log('verif 1')
+    console.log(req.body)
   if (!req.body.fullname || !req.body.email || !req.body.password) {
     return res.status(400).send({ message: "User must have fullname, email and password!" })
   }
   const salt = await bcrypt.genSalt(10)
   const hashPassword = await bcrypt.hash(req.body.password, salt)
+  console.log('verif 2')
+  console.log(req.body.email, hashPassword, req.body.fullname)
   try {
     await db.connex.query(
       "CALL ajouter_utilisateur(?, ?, ?)", 
       { replacements: [req.body.email, hashPassword, req.body.fullname] }
     )
+    console.log('verif 3')
     res.send({ message: "Utilisateur créé" })
   } catch (err) {
     res.status(500).send({ message: err.message })
@@ -42,20 +47,19 @@ exports.findOne = async (req, res) => {
       "CALL verifier_utilisateur_par_email(?)",
       { replacements: [req.body.email] }
     )
-    const user = users[0]
-    
-    if (!user) {
+
+    if (!users) {
       return res.status(400).send({ message: 'Utilisateur non trouvé' })
     }
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    const validPassword = await bcrypt.compare(req.body.password, users.password)
     if (!validPassword) {
       return res.status(400).send({ message: 'Mot de passe incorrect' })
     }
 
     // Création du token avec expiration
     const token = jwt.sign(
-      { id: user.id, role: user.role },
+      { id: users.id, role: users.role },
       'secret',
       { expiresIn: '24h' }
     )
@@ -71,10 +75,10 @@ exports.findOne = async (req, res) => {
     // Réponse sans le mot de passe
     res.send({
       user: {
-        id: user.id,
-        fullname: user.fullname,
-        email: user.email,
-        role: user.role
+        id: users.id,
+        fullname: users.fullname,
+        email: users.email,
+        role: users.role
       }
     })
   } catch (err) {
