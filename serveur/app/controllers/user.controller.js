@@ -63,7 +63,6 @@ exports.findOne = async (req, res) => {
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000
     })
-    console.log('dcjnskcjsncdskj')
     delete user[0].password
     res.send({ user: {
       id: user[0].id,

@@ -100,7 +100,6 @@ onMounted(() => {
 })
 
 function supprimerUtilisateur (id) {
-  console.log('Supprimer l\'utilisateur avec ID:', id)
   if (confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
     UserDataService.deleteUser(id)
       .then(() => {

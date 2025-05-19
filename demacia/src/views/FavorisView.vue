@@ -9,7 +9,7 @@
         <img :src="favori.photo" :alt="favori.nom_jeu">
         <h3>{{ favori.nom_jeu }}</h3>
         <p>{{ favori.description }}</p>
-        <p><strong>Date d'ajout :</strong> {{ favori.Date_ajout }}</p>
+        <p><strong>Date d'ajout :</strong> {{ favori.dateAjoutLisible }}</p>
         <button class="btn" @click="retirerFavori(favori.Id_favoris)">Retirer des favoris</button>
       </div>
     </div>
@@ -30,6 +30,7 @@ export default {
   computed: {
     utilisateurId () {
       // On suppose que l'utilisateur est stocké dans le store Vuex
+      console.log('utilisateurId', this.$store.getters.user)
       return this.$store.getters.user ? this.$store.getters.user.id : null
     }
   },
@@ -44,7 +45,16 @@ export default {
     const favorisAvecJeux = await Promise.all(
       response.data.map(async favori => {
         const jeu = await JeuDataService.get(favori.Id_jeu)
-        return { ...favori, ...jeu.data }
+        // Formatage de la date d'ajout
+        const date = new Date(favori.Date_ajout)
+        const dateAjoutLisible = date.toLocaleDateString('fr-FR')
+        return {
+          ...favori,
+          nom_jeu: jeu.data.Nom_jeu,
+          photo: jeu.data.Photo,
+          description: jeu.data.Description,
+          dateAjoutLisible // nouvelle propriété formatée
+        }
       })
     )
     this.favoris = favorisAvecJeux
