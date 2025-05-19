@@ -44,9 +44,9 @@
         <tbody>
           <tr v-for="jeu in games" :key="jeu.Id_jeu">
             <td>{{ jeu.Id_jeu }}</td>
-            <td>{{ jeu.nom_jeu }}</td>
-            <td>{{ jeu.categorie }}</td>
-            <td>{{ jeu.duree_mini }} - {{ jeu.duree_max }}</td>
+            <td>{{ jeu.Nom_jeu }}</td>
+            <td>{{ jeu.Categorie }}</td>
+            <td>{{ jeu.Duree_mini }} - {{ jeu.Duree_max }}</td>
             <td><button @click="deleteGame(jeu.Id_jeu)" class="btn-suppr">Supprimer</button></td>
           </tr>
         </tbody>
@@ -111,7 +111,8 @@ function supprimerUtilisateur (id) {
 function fetchGames () {
   axios.get('http://localhost:8081/api/jeu', { withCredentials: true })
     .then(res => {
-      games.value = res.data.map(j => j.dataValues || j)
+      console.log('Jeux reçus:', res.data)
+      games.value = res.data
     })
 }
 
