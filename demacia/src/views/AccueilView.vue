@@ -140,7 +140,7 @@ export default {
   font-size: 0.95rem;
 }
 
-/* === Navigation (ajout de contours) === */
+/* === Navigation === */
 nav a, .navbar button {
   border: 2px solid #ddd;
   border-radius: 6px;

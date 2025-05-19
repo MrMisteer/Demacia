@@ -35,14 +35,8 @@ export default {
           console.log('Connexion réussie', response.data)
           const user = response.data.user
           const token = response.data.token
-
-          // Stockage dans localStorage
           localStorage.setItem('user', JSON.stringify({ ...user, token }))
-
-          // Optionnel : Vuex si tu veux
           this.$store.dispatch('setUser', user)
-
-          // Redirection selon rôle
           if (user.role === 'admin') {
             this.$router.push({ name: 'Admin' }) // vers AdminView.vue
           } else {

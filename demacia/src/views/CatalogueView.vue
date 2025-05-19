@@ -70,7 +70,6 @@ export default {
       )
     },
     utilisateurConnecte () {
-      // Utilise Vuex pour vérifier la connexion
       return !!this.$store.getters.user
     },
     utilisateurId () {
@@ -102,11 +101,10 @@ export default {
         alert('Vous devez être connecté pour ajouter aux favoris.')
         return
       }
-      // Prépare les données à envoyer à l'API, avec Id_user
       const data = {
         Id_jeu: jeu.Id_jeu,
-        Id_user: this.utilisateurId, // Ajout de l'utilisateur connecté
-        Date_ajout: new Date().toISOString().slice(0, 10) // format YYYY-MM-DD
+        Id_user: this.utilisateurId, 
+        Date_ajout: new Date().toISOString().slice(0, 10) 
       }
       FavorisDataService.create(data)
         .then(() => {
