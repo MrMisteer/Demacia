@@ -50,3 +50,25 @@ exports.update = async (req, res) => {
   try {
     await db.connex.query(
       "CALL ModifierJeu(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      {
+        replacements: [
+          id, nom_jeu, photo, description, annee_sortie,
+          mini_player, max_player, duree_mini, duree_max, categorie
+        ]
+      }
+    )
+    res.status(200).send({ message: "Jeu modifié avec succès" })
+  } catch (err) {
+    res.status(500).send({ message: err.message })
+  }
+}
+
+// Supprimer un jeu
+exports.delete = async (req, res) => {
+  try {
+    await db.connex.query("DELETE FROM Jeu WHERE Id_jeu = ?", { replacements: [req.params.id] })
+    res.status(200).send({ message: "Jeu supprimé" })
+  } catch (err) {
+    res.status(500).send({ message: err.message })
+  }
+}

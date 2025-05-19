@@ -64,6 +64,30 @@ exports.findOne = async (req, res) => {
   }
 }
 
+// Vérifier l'authentification de l'utilisateur (exemple basique)
+exports.auth = async (req, res) => {
+  try {
+    const token = req.cookies.jwt
+    if (!token) return res.status(401).send({ message: 'Non authentifié' })
+    const decoded = jwt.verify(token, 'secret')
+    const [users] = await db.connex.query(
+      "CALL verifier_utilisateur_par_id(?)",
+      { replacements: [decoded.id] }
+    )
+    const user = users[0]
+    if (!user) return res.status(401).send({ message: 'Utilisateur non trouvé' })
+    res.send({ user })
+  } catch (err) {
+    res.status(401).send({ message: 'Token invalide' })
+  }
+}
+
+// Déconnexion (suppression du cookie)
+exports.logout = async (req, res) => {
+  res.clearCookie('jwt')
+  res.send({ message: 'Déconnecté' })
+}
+
 // Supprimer un utilisateur via la procédure stockée
 exports.deleteOne = async (req, res) => {
   try {
