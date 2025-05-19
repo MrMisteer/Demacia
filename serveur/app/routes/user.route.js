@@ -1,18 +1,21 @@
-module.exports = app => {
-    const user = require('../controllers/user.controller.js')
-    const { isAdmin, verifyToken } = require('../middlewares/auth.middleware')
+const express = require('express')
+const user = require('../controllers/user.controller.js')
+const { isAdmin, verifyToken } = require('../middlewares/auth.middleware')
 
-    const router = require('express').Router()
+const router = express.Router()
 
-    router.post('/', user.create)           
-    router.post('/login', user.findOne)     
+// Routes publiques
+router.post('/', user.create)
+router.post('/login', user.findOne)
 
-    router.get('/auth', verifyToken, user.auth)
-    router.get('/logout', verifyToken, user.logout)
-    
-    router.get('/admin/all-users', verifyToken, isAdmin, user.findAll)
-    
-    router.delete('/:id', verifyToken, user.deleteOne)
+// Routes protégées
+router.get('/auth', verifyToken, user.auth)
+router.get('/logout', verifyToken, user.logout)
 
-    app.use('/api/user', router)
-}
+// Routes admin
+router.get('/admin/all-users', verifyToken, isAdmin, user.findAll)
+
+// Route de suppression
+router.delete('/:id', verifyToken, user.deleteOne)
+
+module.exports = router

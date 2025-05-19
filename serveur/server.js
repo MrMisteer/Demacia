@@ -53,10 +53,15 @@ db.connex.sync().then(async () => {
 })
 
 // Routes de l'application
-require('./app/routes/jeu.route')(app)
-require('./app/routes/user.route')(app)
-require('./app/routes/favoris.route')(app)
-require('./app/routes/commentaire.route')(app)
+const jeuRoutes = require('./app/routes/jeu.route')
+const userRoutes = require('./app/routes/user.route')
+const favorisRoutes = require('./app/routes/favoris.route')
+const commentaireRoutes = require('./app/routes/commentaire.route')
+
+app.use('/api/jeu', jeuRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/favoris', favorisRoutes)
+app.use('/api/commentaire', commentaireRoutes)
 
 
 // Lancement du serveur

@@ -1,9 +1,9 @@
-module.exports = app => {
-  const commentaire = require('../controllers/commentaire.controller')
-  const router = require('express').Router()
+const express = require('express')
+const commentaire = require('../controllers/commentaire.controller')
 
-  router.post('/', commentaire.create)
-  router.get('/:idJeu', commentaire.findByGame)
+const router = express.Router()
 
-  app.use('/api/commentaires', router)
-}
+router.post('/', commentaire.create)
+router.get('/:idJeu', commentaire.findByGame)
+
+module.exports = router

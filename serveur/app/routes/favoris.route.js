@@ -1,21 +1,21 @@
-module.exports = app => {
-  const favoris = require('../controllers/favoris.controller.js')
-  const router = require('express').Router()
+const express = require('express')
+const favoris = require('../controllers/favoris.controller.js')
 
-  // Ajouter un favori
-  router.post('/', favoris.create)
+const router = express.Router()
 
-  // Récupérer tous les favoris
-  router.get('/', favoris.findAll)
+// Ajouter un favori
+router.post('/', favoris.create)
 
-  // Récupérer un favori par son id
-  router.get('/:id', favoris.findOne)
+// Récupérer tous les favoris
+router.get('/', favoris.findAll)
 
-  // Supprimer un favori par son id
-  router.delete('/:id', favoris.delete)
+// Récupérer un favori par son id
+router.get('/:id', favoris.findOne)
 
-  // Récupérer tous les favoris d'un utilisateur par son id
-  router.get('/user/:id', favoris.findAllByUser)
+// Supprimer un favori par son id
+router.delete('/:id', favoris.delete)
 
-  app.use('/api/favoris', router)
-}
+// Récupérer tous les favoris d'un utilisateur par son id
+router.get('/user/:id', favoris.findAllByUser)
+
+module.exports = router
