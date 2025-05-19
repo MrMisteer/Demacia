@@ -6,7 +6,7 @@
     <select v-model="selectedGame" @change="fetchComments">
       <option disabled value="">-- Choisissez --</option>
       <option v-for="jeu in jeux" :key="jeu.Id_jeu" :value="jeu.Id_jeu">
-        {{ jeu.nom_jeu }}
+        {{ jeu.Nom_jeu }}
       </option>
     </select>
 

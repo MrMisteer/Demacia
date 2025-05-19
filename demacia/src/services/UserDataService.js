@@ -9,7 +9,7 @@ class UserDataService {
   }
 
   register (data) {
-    return http.post('/register', data)
+    return http.post('/user', data)
   }
 
   getAuth () {

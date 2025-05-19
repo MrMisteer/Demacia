@@ -24,16 +24,16 @@
     <div v-else class="cards">
       <div
         v-for="jeu in jeuxFiltres"
-        :key="jeu.id"
+        :key="jeu.Id_jeu"
         class="card"
       >
         <img
-          :src="jeu.photo"
-          :alt="jeu.nom_jeu"
+          :src="jeu.Photo"
+          :alt="jeu.Nom_jeu"
           @error="$event.target.src = '/defaut.jpg'"
         />
-        <h3>{{ jeu.nom_jeu || 'Sans titre' }}</h3>
-        <p>{{ jeu.description || 'Aucune description disponible' }}</p>
+        <h3>{{ jeu.Nom_jeu || 'Sans titre' }}</h3>
+        <p>{{ jeu.Description || 'Aucune description disponible' }}</p>
         <button
           class="btn"
           @click="ajouterFavori(jeu)"
@@ -65,8 +65,8 @@ export default {
       if (!this.recherche) return this.jeux
       const rechercheMin = this.recherche.toLowerCase()
       return this.jeux.filter(jeu =>
-        (jeu.nom_jeu && jeu.nom_jeu.toLowerCase().includes(rechercheMin)) ||
-        (jeu.description && jeu.description.toLowerCase().includes(rechercheMin))
+        (jeu.Nom_jeu && jeu.Nom_jeu.toLowerCase().includes(rechercheMin)) ||
+        (jeu.Description && jeu.Description.toLowerCase().includes(rechercheMin))
       )
     },
     utilisateurConnecte () {
@@ -110,7 +110,7 @@ export default {
       }
       FavorisDataService.create(data)
         .then(() => {
-          alert(`Jeu "${jeu.nom_jeu}" ajouté à vos favoris ✅`)
+          alert(`Jeu "${jeu.Nom_jeu}" ajouté à vos favoris ✅`)
         })
         .catch(() => {
           alert('Erreur lors de l\'ajout aux favoris (déjà ajouté ?)')

@@ -33,33 +33,52 @@ exports.create = async (req, res) => {
 // Vérifier un utilisateur par email (login)
 exports.findOne = async (req, res) => {
   try {
+    // Validation des données
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).send({ message: 'Email et mot de passe requis' })
+    }
+
     const [users] = await db.connex.query(
       "CALL verifier_utilisateur_par_email(?)",
       { replacements: [req.body.email] }
     )
     const user = users[0]
+    
     if (!user) {
-      return res.status(400).send({ message: 'Username not found' })
+      return res.status(400).send({ message: 'Utilisateur non trouvé' })
     }
-    if (!await bcrypt.compare(req.body.password, user.Mot_de_passe)) {
-      return res.status(400).send({ message: 'password incorrect' })
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    if (!validPassword) {
+      return res.status(400).send({ message: 'Mot de passe incorrect' })
     }
-    const token = jwt.sign({ id: user.Id_utilisateur }, 'secret')
+
+    // Création du token avec expiration
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      'secret',
+      { expiresIn: '24h' }
+    )
+
+    // Configuration du cookie
     res.cookie('jwt', token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000 // 24 heures
     })
+
+    // Réponse sans le mot de passe
     res.send({
-      token: token,
       user: {
-        id: user.Id_utilisateur,
+        id: user.id,
         fullname: user.fullname,
-        email: user.Email,
+        email: user.email,
         role: user.role
       }
     })
   } catch (err) {
+    console.error('Erreur login:', err)
     res.status(500).send({ message: err.message })
   }
 }
@@ -68,16 +87,28 @@ exports.findOne = async (req, res) => {
 exports.auth = async (req, res) => {
   try {
     const token = req.cookies.jwt
-    if (!token) return res.status(401).send({ message: 'Non authentifié' })
+    if (!token) {
+      return res.status(401).send({ message: 'Non authentifié' })
+    }
+
     const decoded = jwt.verify(token, 'secret')
     const [users] = await db.connex.query(
       "CALL verifier_utilisateur_par_id(?)",
       { replacements: [decoded.id] }
     )
     const user = users[0]
-    if (!user) return res.status(401).send({ message: 'Utilisateur non trouvé' })
+
+    if (!user) {
+      res.clearCookie('jwt')
+      return res.status(401).send({ message: 'Utilisateur non trouvé' })
+    }
+
+    // Ne pas renvoyer le mot de passe
+    delete user.password
     res.send({ user })
   } catch (err) {
+    console.error('Erreur auth:', err)
+    res.clearCookie('jwt')
     res.status(401).send({ message: 'Token invalide' })
   }
 }
