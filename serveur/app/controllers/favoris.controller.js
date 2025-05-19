@@ -1,19 +1,17 @@
 const db = require('../models')
-const Favoris = db.favoris
 
-// Créer un favori
+// Créer un favori via la procédure stockée
 exports.create = async (req, res) => {
+  const { Id_jeu, Id_user, Date_ajout } = req.body
+  if (!Id_jeu || !Id_user || !Date_ajout) {
+    return res.status(400).send({ message: "Id_jeu, Id_user et Date_ajout sont requis !" })
+  }
   try {
-    console.log('Reçu du front :', req.body) // Ajoute ce log ici
-    if (!req.body.Id_jeu || !req.body.Date_ajout || !req.body.Id_user) {
-      return res.status(400).send({ message: "Id_jeu, Id_user et Date_ajout sont requis !" })
-    }
-    const favori = await Favoris.create({
-      Id_jeu: req.body.Id_jeu,
-      Id_user: req.body.Id_user, // <-- Ajouté ici
-      Date_ajout: req.body.Date_ajout
-    })
-    res.status(201).send(favori)
+    await db.connex.query(
+      "CALL AjouterFavori(?, ?, ?)",
+      { replacements: [Id_jeu, Id_user, Date_ajout] }
+    )
+    res.status(201).send({ message: "Favori ajouté !" })
   } catch (err) {
     res.status(500).send({ message: err.message })
   }
@@ -22,8 +20,8 @@ exports.create = async (req, res) => {
 // Récupérer tous les favoris
 exports.findAll = async (req, res) => {
   try {
-    const favoris = await Favoris.findAll()
-    res.send(favoris)
+    const [data] = await db.connex.query("SELECT * FROM Favoris")
+    res.send(data)
   } catch (err) {
     res.status(500).send({ message: err.message })
   }
@@ -32,11 +30,11 @@ exports.findAll = async (req, res) => {
 // Récupérer un favori par son id
 exports.findOne = async (req, res) => {
   try {
-    const favori = await Favoris.findByPk(req.params.id)
-    if (!favori) {
+    const [data] = await db.connex.query("SELECT * FROM Favoris WHERE Id_favoris = ?", { replacements: [req.params.id] })
+    if (!data[0]) {
       return res.status(404).send({ message: "Favori non trouvé" })
     }
-    res.send(favori)
+    res.send(data[0])
   } catch (err) {
     res.status(500).send({ message: err.message })
   }
@@ -45,8 +43,8 @@ exports.findOne = async (req, res) => {
 // Supprimer un favori par son id
 exports.delete = async (req, res) => {
   try {
-    const nb = await Favoris.destroy({ where: { Id_favoris: req.params.id } })
-    if (nb === 1) {
+    const [result] = await db.connex.query("DELETE FROM Favoris WHERE Id_favoris = ?", { replacements: [req.params.id] })
+    if (result.affectedRows === 1) {
       res.send({ message: "Favori supprimé !" })
     } else {
       res.status(404).send({ message: "Favori non trouvé" })
@@ -59,8 +57,8 @@ exports.delete = async (req, res) => {
 // Récupérer tous les favoris d'un utilisateur
 exports.findAllByUser = async (req, res) => {
   try {
-    const favoris = await Favoris.findAll({ where: { Id_user: req.params.id } })
-    res.send(favoris)
+    const [data] = await db.connex.query("SELECT * FROM Favoris WHERE Id_user = ?", { replacements: [req.params.id] })
+    res.send(data)
   } catch (err) {
     res.status(500).send({ message: err.message })
   }
