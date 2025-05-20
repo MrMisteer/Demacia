@@ -2,17 +2,19 @@ const db = require('../models')
 
 // Créer un commentaire via la procédure stockée
 exports.create = async (req, res) => {
-  const { texte, note, Id_jeu, Id_utilisateur } = req.body
-  if (!texte || !note || !Id_jeu || !Id_utilisateur) {
+  console.log(req.body)
+  const { texte, note, Id_jeu, Id_user } = req.body
+  if (!texte || !note || !Id_jeu || !Id_user) {
     return res.status(400).send({ message: 'Champs requis manquants.' })
   }
   try {
     await db.connex.query(
       "CALL AjouterCommentaire(?, ?, ?, ?)",
-      { replacements: [texte, note, Id_jeu, Id_utilisateur] }
+      { replacements: [texte, note, Id_jeu, Id_user] }
     )
     res.status(201).send({ message: "Commentaire ajouté" })
   } catch (err) {
+    console.error('Erreur ajout commentaire:', err)
     res.status(500).send({ message: err.message })
   }
 }

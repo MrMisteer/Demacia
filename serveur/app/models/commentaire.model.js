@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     Id_jeu: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    Id_user: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   })
 

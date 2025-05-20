@@ -14,7 +14,7 @@
       <h2>Commentaires pour {{ getGameName(selectedGame) }}</h2>
 
       <ul>
-        <li v-for="comment in commentaires" :key="comment.id_commentaire">
+        <li v-for="comment in commentaires" :key="comment.id">
           <strong>{{ comment.note }}/10</strong> - {{ comment.texte }}
         </li>
       </ul>
@@ -40,21 +40,27 @@ const commentaires = ref([])
 const nouveauCommentaire = ref('')
 const note = ref(5)
 const formError = ref('')
+const user = JSON.parse(localStorage.getItem('user') || '{}')
 
 onMounted(() => {
   axios.get('http://localhost:8081/api/jeu')
     .then(res => {
       jeux.value = res.data.map(j => j.dataValues || j)
+      // Sélectionne le premier jeu par défaut et charge ses commentaires
+      if (jeux.value.length > 0) {
+        selectedGame.value = jeux.value[0].Id_jeu
+        fetchComments()
+      }
     })
 })
 
 function getGameName (id) {
   const jeu = jeux.value.find(j => j.Id_jeu === id)
-  return jeu ? jeu.nom_jeu : ''
+  return jeu ? jeu.Nom_jeu : ''
 }
 
 function fetchComments () {
-  axios.get(`http://localhost:8081/api/commentaires/${selectedGame.value}`)
+  axios.get(`http://localhost:8081/api/commentaire/${selectedGame.value}`)
     .then(res => {
       commentaires.value = res.data
     })
@@ -68,10 +74,12 @@ function envoyerCommentaire () {
 
   formError.value = ''
 
-  axios.post('http://localhost:8081/api/commentaires', {
+  console.log(user)
+  axios.post('http://localhost:8081/api/commentaire', {
     texte: nouveauCommentaire.value,
     note: note.value,
-    Id_jeu: selectedGame.value
+    Id_jeu: selectedGame.value,
+    Id_user: user.Id_user || user.id
   }, {
     withCredentials: true
   })
