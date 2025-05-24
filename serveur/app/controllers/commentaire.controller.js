@@ -1,4 +1,4 @@
-const db = require('../models')
+const db = require('../../db')
 
 // Créer un commentaire via la procédure stockée
 exports.create = async (req, res) => {
@@ -8,9 +8,9 @@ exports.create = async (req, res) => {
     return res.status(400).send({ message: 'Champs requis manquants.' })
   }
   try {
-    await db.connex.query(
+    await db.query(
       "CALL AjouterCommentaire(?, ?, ?, ?)",
-      { replacements: [texte, note, Id_jeu, Id_user] }
+      [texte, note, Id_jeu, Id_user]
     )
     res.status(201).send({ message: "Commentaire ajouté" })
   } catch (err) {
@@ -23,9 +23,9 @@ exports.create = async (req, res) => {
 exports.findByGame = async (req, res) => {
   const id = req.params.idJeu
   try {
-    const [data] = await db.connex.query(
+    const [data] = await db.query(
       "SELECT * FROM VueCommentairesJeu WHERE Id_jeu = ?",
-      { replacements: [id] }
+      [id]
     )
     res.send(data)
   } catch (err) {
