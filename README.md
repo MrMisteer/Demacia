@@ -34,7 +34,7 @@ vous êtes au bon endroit.
 
 -Installer les dépendances : npm install
 - Accédez au dossier server : cd ../server
-- Lancez le serveur de développement : npm run dev
+- Lancez le serveur de développement : npm run serve
 - Accédez à l'application sur http://localhost:8080
 
 ⚠️ ⚠️ Merci de vérifiez que vous êtes bien sur le port 8080
