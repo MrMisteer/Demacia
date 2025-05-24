@@ -103,7 +103,7 @@ export default {
       }
       const data = {
         Id_jeu: jeu.Id_jeu,
-        Id_user: this.utilisateurId, // Ajout de l'utilisateur connecté
+        Id_user: this.utilisateurId,
         Date_ajout: new Date().toISOString().slice(0, 10) // format YYYY-MM-DD
       }
       FavorisDataService.create(data)

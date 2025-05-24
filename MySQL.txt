@@ -1,0 +1,308 @@
+drop table if exists commentaires;
+drop table if exists historique_ajouts;
+drop table if exists favoris;
+drop table if exists user;
+
+drop table if exists jeu;
+
+CREATE TABLE jeu (
+  Id_jeu INT AUTO_INCREMENT PRIMARY KEY,
+  Nom_jeu VARCHAR(255),
+  Photo TEXT,
+  Description TEXT,
+  Annee_sortie INT,
+  Mini_player INT,
+  Max_player INT,
+  Duree_mini TIME,
+  Duree_max TIME,
+  Categorie VARCHAR(255)
+);
+INSERT INTO Jeu (Id_jeu, Nom_jeu, Photo, Description, Annee_sortie, Mini_player, Max_player, Duree_mini, Duree_max, Categorie)
+VALUES
+(1, 'Monopoly', 'https://www.regles-de-jeux.com/wp-content/uploads/2014/03/regle-monopoly.jpg', 'Jeu de société classique de gestion de propriétés', 1935, 2, 6, '00:30:00', '02:00:00', 'Stratégie'),
+(2, 'Catan', 'https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_CatanConsoleEdition.jpg', 'Jeu de colonisation de l île de Catan', 1995, 3, 4, '00:45:00', '01:30:00', 'Stratégie'),
+(3, 'Risk', 'https://www.vindjeu.eu/prd/wp-content/uploads/2014/09/833-Risk-2.jpg', 'Jeu de stratégie militaire pour dominer le monde', 1957, 2, 6, '01:00:00', '02:30:00', 'Stratégie'),
+(4, 'Dixit', 'https://www.lataniere.fr/wp-content/uploads/2016/05/dixit-odyssey-content.jpg', 'Jeu créatif d images et d histoires', 2008, 3, 6, '00:30:00', '01:00:00', 'Créativité'),
+(5, 'Pandemic', 'https://static.fnac-static.com/multimedia/Images/FR/MDM/0d/74/38/3699725/1520-1/tsp20250204214811/Jeu-d-ambiance-Asmodee-Pandemic.jpg', 'Jeu coopératif où les joueurs luttent contre des pandémies', 2008, 2, 4, '00:45:00', '01:30:00', 'Coopératif'),
+(6, 'Carcassonne', 'https://cf.geekdo-images.com/1CnZCdiM3FeI3b8-eN-q8A__opengraph/img/C2YcvigJ74Y4hWtQbTLoMdz0JEI=/fit-in/1200x630/filters:strip_icc()/pic44244.jpg', 'Jeu de tuiles et de stratégie de territoire', 2000, 2, 5, '00:35:00', '01:15:00', 'Stratégie'),
+(7, '7 Wonders', 'https://cdn.svc.asmodee.net/production-rprod/storage/games/7-wonders/sev-content-159243209212Feq.png', 'Jeu de construction de civilisation avec des cartes', 2010, 3, 7, '00:30:00', '01:00:00', 'Stratégie'),
+(8, 'Twilight Struggle', 'https://m.media-amazon.com/images/I/51lV+P3q6eL._AC_UF1000,1000_QL80_.jpg', 'Jeu de stratégie sur la guerre froide', 2005, 2, 2, '01:30:00', '02:30:00', 'Stratégie'),
+(9, 'Azul', 'https://lagranderecre-lagranderecre-fr-storage.omn.proximis.com/Imagestorage/images/0/0/6103b33eaa2fb_PBAZU01FR_EAN_826956620105_1_.jpg', 'Jeu de placement de tuiles décoratives', 2017, 2, 4, '00:30:00', '01:00:00', 'Créativité'),
+(10, 'Ticket to Ride', 'https://m.media-amazon.com/images/I/91YNJM4oyhL.jpg', 'Jeu de stratégie pour construire des lignes de chemin de fer', 2004, 2, 5, '00:45:00', '01:30:00', 'Stratégie'),
+(11, 'Exploding Kittens', 'https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000029283/8a97e3725f288c7d3a58710ed371ee9188ce9724e24da3f5134c7b727c03a36f', 'Jeu de cartes rapide et humoristique', 2015, 2, 5, '00:15:00', '00:30:00', 'Cartes');
+
+
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    token VARCHAR(255),
+    role VARCHAR(255) DEFAULT 'user',
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE commentaires (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  texte TEXT NOT NULL,
+  note INT NOT NULL CHECK (note >= 0 AND note <= 10),
+  Id_jeu INT NOT NULL,
+  Id_user INT NOT NULL,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (Id_jeu) REFERENCES jeu(Id_jeu),
+  FOREIGN KEY (Id_user) REFERENCES user(id)
+);
+
+CREATE TABLE favoris (
+  Id_favoris INT AUTO_INCREMENT PRIMARY KEY,
+  Id_user INT NOT NULL,
+  Id_jeu INT NOT NULL,
+  Date_ajout DATE NOT NULL,
+  FOREIGN KEY (Id_user) REFERENCES user(id),
+  FOREIGN KEY (Id_jeu) REFERENCES jeu(Id_jeu)
+);
+
+SELECT routine_name, routine_schema
+FROM information_schema.routines
+WHERE routine_type = 'PROCEDURE'
+  AND routine_schema = 'db_jeu';
+
+
+drop procedure if exists AjouterCommentaire;
+drop procedure if exists AjouterFavori;
+drop procedure if exists AjouterJeu;
+drop procedure if exists lister_utilisateurs;
+drop procedure if exists ModifierJeu;
+drop procedure if exists SupprimerJeu;
+drop procedure if exists supprimer_utilisateur;
+drop procedure if exists verifier_utilisateur_par_email;
+drop procedure if exists ajouter_utilisateur;
+drop procedure if exists verifier_utilisateur_par_id;
+
+SELECT trigger_name, event_manipulation, event_object_table, trigger_schema
+FROM information_schema.triggers
+WHERE trigger_schema = 'db_jeu';
+
+drop trigger if exists log_ajout_jeu;
+drop trigger if exists log_suppression_utilisateur;
+drop trigger if exists log_ajout_favori;
+drop trigger if exists log_ajout_commentaire;
+
+
+
+CREATE TABLE historique_ajouts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom_jeu VARCHAR(255),
+  date_ajout DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER //
+
+CREATE TRIGGER log_ajout_jeu
+AFTER INSERT ON jeu
+FOR EACH ROW
+BEGIN
+  INSERT INTO historique_ajouts (nom_jeu)
+  VALUES (NEW.Nom_jeu);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+DELIMITER //
+
+CREATE PROCEDURE lister_utilisateurs()
+BEGIN
+  SELECT id, email, fullname, role FROM user;
+END //
+
+CREATE PROCEDURE ajouter_utilisateur(
+  IN p_email VARCHAR(50),
+  IN p_password VARCHAR(255),
+  IN p_fullname VARCHAR(50),
+  IN p_token VARCHAR(255),
+  IN p_role VARCHAR(50)
+)
+BEGIN
+  INSERT INTO user (email, password, fullname, token, role)
+  VALUES (p_email, p_password, p_fullname, p_token, p_role);
+END //
+
+CREATE PROCEDURE verifier_utilisateur_par_email(IN p_email VARCHAR(50))
+BEGIN
+  SELECT * FROM user WHERE email = p_email;
+END //
+
+CREATE PROCEDURE supprimer_utilisateur(IN p_id INT)
+BEGIN
+  DELETE FROM user WHERE id = p_id;
+END //
+
+DELIMITER ;
+
+-- Ajouter un jeu
+DELIMITER //
+CREATE PROCEDURE AjouterJeu (
+  IN nom VARCHAR(255),
+  IN photo TEXT,
+  IN description TEXT,
+  IN annee INT,
+  IN min_players INT,
+  IN max_players INT,
+  IN dureeMin TIME,
+  IN dureeMax TIME,
+  IN categorie VARCHAR(255)
+)
+BEGIN
+  INSERT INTO Jeu (Nom_jeu, Photo, Description, Annee_sortie, Mini_player, Max_player, Duree_mini, Duree_max, Categorie)
+  VALUES (nom, photo, description, annee, min_players, max_players, dureeMin, dureeMax, categorie);
+END;
+//
+DELIMITER ;
+
+-- Modifier un jeu
+DELIMITER //
+CREATE PROCEDURE ModifierJeu (
+  IN jeuId INT,
+  IN nom VARCHAR(255),
+  IN photo TEXT,
+  IN description TEXT,
+  IN annee INT,
+  IN min_players INT,
+  IN max_players INT,
+  IN dureeMin TIME,
+  IN dureeMax TIME,
+  IN categorie VARCHAR(255)
+)
+BEGIN
+  UPDATE Jeu
+  SET Nom_jeu = nom,
+      Photo = photo,
+      Description = description,
+      Annee_sortie = annee,
+      Mini_player = min_players,
+      Max_player = max_players,
+      Duree_mini = dureeMin,
+      Duree_max = dureeMax,
+      Categorie = categorie
+  WHERE Id_jeu = jeuId;
+END;
+//
+DELIMITER ;
+
+-- Supprimer un jeu
+DELIMITER //
+CREATE PROCEDURE SupprimerJeu (IN jeuId INT)
+BEGIN
+  DELETE FROM Jeu WHERE Id_jeu = jeuId;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE AjouterFavori(
+  IN p_Id_jeu INT,
+  IN p_Id_user INT,
+  IN p_Date_ajout DATE
+)
+BEGIN
+  INSERT INTO favoris (Id_jeu, Id_user, Date_ajout)
+  VALUES (p_Id_jeu, p_Id_user, p_Date_ajout);
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE AjouterCommentaire(
+  IN p_texte TEXT,
+  IN p_note INT,
+  IN p_Id_jeu INT,
+  IN p_Id_utilisateur INT
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+  END;
+
+  START TRANSACTION;
+
+  INSERT INTO commentaires (texte, note, Id_jeu, Id_user)
+  VALUES (p_texte, p_note, p_Id_jeu, p_Id_utilisateur);
+
+  COMMIT;
+END;
+//
+
+DELIMITER ;
+
+
+CREATE OR REPLACE VIEW VueCommentairesJeu AS
+SELECT
+  c.id,
+  c.texte,
+  c.note,
+  c.Id_jeu,
+  c.Id_user,
+  u.fullname AS auteur
+FROM commentaires c
+JOIN User u ON u.id = c.Id_user;
+
+
+DELIMITER //
+
+CREATE TRIGGER log_ajout_commentaire
+AFTER INSERT ON Commentaires
+FOR EACH ROW
+BEGIN
+  INSERT INTO historique_ajouts (nom_jeu)
+  VALUES (CONCAT('Commentaire ajouté sur le jeu ID ', NEW.Id_jeu));
+END;//
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER log_suppression_utilisateur
+AFTER DELETE ON user
+FOR EACH ROW
+BEGIN
+  INSERT INTO historique_ajouts (nom_jeu)
+  VALUES (CONCAT('Suppression utilisateur ', OLD.fullname));
+END;//
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER log_ajout_favori
+AFTER INSERT ON Favoris
+FOR EACH ROW
+BEGIN
+  INSERT INTO historique_ajouts (nom_jeu)
+  VALUES (CONCAT('Favori ajouté pour le jeu ID ', NEW.Id_jeu));
+END;//
+DELIMITER;
+
+DELIMITER //
+
+CREATE PROCEDURE verifier_utilisateur_par_id(IN p_id INT)
+BEGIN
+  SELECT id, email, fullname, role
+  FROM user
+  WHERE id = p_id;
+END //
+
+DELIMITER ;
+
+SELECT * FROM VueCommentairesJeu WHERE Id_jeu = 5;
+
+SELECT * FROM VueCommentairesJeu;
+select * from jeu;
+select * from favoris;
+select * from user;
+select * from commentaires;

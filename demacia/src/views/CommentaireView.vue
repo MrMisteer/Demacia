@@ -46,7 +46,6 @@ onMounted(() => {
   axios.get('http://localhost:8081/api/jeu')
     .then(res => {
       jeux.value = res.data.map(j => j.dataValues || j)
-      // Sélectionne le premier jeu par défaut et charge ses commentaires
       if (jeux.value.length > 0) {
         selectedGame.value = jeux.value[0].Id_jeu
         fetchComments()
