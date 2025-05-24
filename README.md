@@ -27,7 +27,7 @@ vous êtes au bon endroit.
 
 **Configurer le server côté backend**
 
-- Accédez au fichier dmacia : cd demacia
+- Accédez au fichier demacia : cd demacia
 - Lancez le server : node server.js
 
 **Configurer le server côté frontend**
